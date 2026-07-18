@@ -1,5 +1,6 @@
 # Test Case Generator
-LLM-powered Spring Boot application that generates JUnit, Mockito, and REST Assured test suites from requirements, OpenAPI specs, and Java code
+LLM-powered Spring Boot application that generates JUnit, Mockito, and REST Assured test suites from requirements, OpenAPI specs, and Java.
+**Live Demo URL:**https://test-case-generator-zr65.onrender.com/
 
 ## What it does
 - **A requirement or user story →**a JUnit 5 + Mockito test class covering the happy path, the failure cases, the boundaries, and the edge cases you'd probably forget at 5pm on a Friday.
@@ -16,11 +17,11 @@ Anything it generates, you can copy or download as a ready-to-drop-in .java file
 Spring AI reaches Groq through its OpenAI-compatible client — same client, different `base-url` and model.
 
 ## Getting started
-**1. Get a free Groq API key** at https://console.groq.com/keys (no credit card required).
-**2. Configure it:**
+- **Get a free Groq API key** at https://console.groq.com/keys (no credit card required).
+- **Configure it:**
 copy .env.example .env
 edit .env and paste your key
-**3. Run it:**
+- **Run it:**
 docker compose up --build
 Then open **http://localhost:8081**.
 
