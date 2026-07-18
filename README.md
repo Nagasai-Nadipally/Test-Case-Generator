@@ -37,12 +37,12 @@ Then open **http://localhost:8081**.
 
 All endpoints accept/return JSON.
 
--GET  /api/health
--POST /api/generate/requirements   { "input": "<requirement text>" }
--POST /api/generate/openapi        { "input": "<OpenAPI/Swagger spec>" }
--POST /api/generate/code           { "input": "<Java source>" }
--POST /api/generate/security       { "input": "<endpoint description>" }
--POST /api/chat                    { "input": "<context, optional>", "question": "<question>" }
+- GET  /api/health
+- POST /api/generate/requirements   { "input": "<requirement text>" }
+- POST /api/generate/openapi        { "input": "<OpenAPI/Swagger spec>" }
+- POST /api/generate/code           { "input": "<Java source>" }
+- POST /api/generate/security       { "input": "<endpoint description>" }
+- POST /api/chat                    { "input": "<context, optional>", "question": "<question>" }
 
 
 
