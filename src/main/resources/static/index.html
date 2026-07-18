@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Case Generator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span class="brand-name">Test Case <span class="accent">Generator</span></span>
+    </div>
+    <div class="status" id="statusPill">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">checking engine…</span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="requirements">01 · Requirements</button>
+    <button class="tab" data-tab="openapi">02 · OpenAPI / Swagger</button>
+    <button class="tab" data-tab="code">03 · Java Code</button>
+    <button class="tab" data-tab="security">04 · Security</button>
+    <button class="tab" data-tab="chat">05 · Ask AI</button>
+  </nav>
+
+  <main class="workspace">
+
+    <!-- REQUIREMENTS -->
+    <section class="panel active" data-panel="requirements">
+      <div class="panel-grid">
+        <div class="col input-col">
+          <label class="col-label">Requirement / user story</label>
+          <textarea id="req-input" placeholder="e.g. User can transfer money only if the account balance is greater than the transfer amount.">User can transfer money only if the account balance is greater than the transfer amount. Transfers above $10,000 require secondary approval. The system must log every transfer attempt.</textarea>
+          <button class="run-btn" data-action="requirements">Generate JUnit tests</button>
+          <p class="hint">Extracts actors, rules, edge cases → generates a JUnit 5 + Mockito test class covering positive, negative, boundary and security cases.</p>
+        </div>
+        <div class="col output-col">
+          <div class="output-header">
+            <span id="req-filename" class="filename">GeneratedRequirementTest.java</span>
+            <div class="output-actions">
+              <button class="icon-btn" data-copy="req-output">Copy</button>
+              <button class="icon-btn" data-download="req-output" data-filename-target="req-filename">Download</button>
+            </div>
+          </div>
+          <pre class="code-output" id="req-output" data-placeholder="Generated test code will appear here."></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- OPENAPI -->
+    <section class="panel" data-panel="openapi">
+      <div class="panel-grid">
+        <div class="col input-col">
+          <label class="col-label">OpenAPI / Swagger spec (JSON or YAML)</label>
+          <textarea id="api-input" placeholder="Paste your swagger.json or OpenAPI YAML here">{
+  "openapi": "3.0.0",
+  "paths": {
+    "/accounts/{id}/transfer": {
+      "post": {
+        "summary": "Transfer money between accounts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": { "type": "number" },
+                  "toAccountId": { "type": "string" }
+                },
+                "required": ["amount", "toAccountId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Transfer successful" },
+          "400": { "description": "Invalid request" },
+          "403": { "description": "Insufficient funds" }
+        }
+      }
+    }
+  }
+}</textarea>
+          <button class="run-btn" data-action="openapi">Generate REST Assured tests</button>
+          <p class="hint">Generates integration tests: happy path, auth, validation, boundary, and negative (4xx/5xx) cases per operation.</p>
+        </div>
+        <div class="col output-col">
+          <div class="output-header">
+            <span id="api-filename" class="filename">GeneratedApiTest.java</span>
+            <div class="output-actions">
+              <button class="icon-btn" data-copy="api-output">Copy</button>
+              <button class="icon-btn" data-download="api-output" data-filename-target="api-filename">Download</button>
+            </div>
+          </div>
+          <pre class="code-output" id="api-output" data-placeholder="Generated test code will appear here."></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- CODE -->
+    <section class="panel" data-panel="code">
+      <div class="panel-grid">
+        <div class="col input-col">
+          <label class="col-label">Java class (Controller / Service / Repository)</label>
+          <textarea id="code-input" placeholder="Paste a Java class here">@Service
+public class TransferService {
+
+    private final AccountRepository accountRepository;
+
+    public TransferService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
+
+    public void transfer(String fromId, String toId, BigDecimal amount) {
+        Account from = accountRepository.findById(fromId)
+                .orElseThrow(() -> new AccountNotFoundException(fromId));
+        if (from.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientFundsException(fromId);
+        }
+        Account to = accountRepository.findById(toId)
+                .orElseThrow(() -> new AccountNotFoundException(toId));
+        from.debit(amount);
+        to.credit(amount);
+        accountRepository.save(from);
+        accountRepository.save(to);
+    }
+}</textarea>
+          <button class="run-btn" data-action="code">Generate JUnit + Mockito tests</button>
+          <p class="hint">Mocks collaborators, covers every public method, includes null/empty/exception edge cases.</p>
+        </div>
+        <div class="col output-col">
+          <div class="output-header">
+            <span id="code-filename" class="filename">GeneratedCodeTest.java</span>
+            <div class="output-actions">
+              <button class="icon-btn" data-copy="code-output">Copy</button>
+              <button class="icon-btn" data-download="code-output" data-filename-target="code-filename">Download</button>
+            </div>
+          </div>
+          <pre class="code-output" id="code-output" data-placeholder="Generated test code will appear here."></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section class="panel" data-panel="security">
+      <div class="panel-grid">
+        <div class="col input-col">
+          <label class="col-label">Endpoint / feature description</label>
+          <textarea id="sec-input" placeholder="Describe the endpoint or feature to threat-test">POST /api/accounts/{id}/transfer
+Requires a valid JWT bearer token. Accepts JSON body { amount, toAccountId }.
+Only the account owner or an admin role may initiate a transfer.</textarea>
+          <button class="run-btn" data-action="security">Generate security tests</button>
+          <p class="hint">Covers SQL injection, JWT expiry/tampering, broken auth, CSRF, XSS, and rate limiting.</p>
+        </div>
+        <div class="col output-col">
+          <div class="output-header">
+            <span id="sec-filename" class="filename">GeneratedSecurityTest.java</span>
+            <div class="output-actions">
+              <button class="icon-btn" data-copy="sec-output">Copy</button>
+              <button class="icon-btn" data-download="sec-output" data-filename-target="sec-filename">Download</button>
+            </div>
+          </div>
+          <pre class="code-output" id="sec-output" data-placeholder="Generated test code will appear here."></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAT -->
+    <section class="panel" data-panel="chat">
+      <div class="panel-grid chat-grid">
+        <div class="col input-col">
+          <label class="col-label">Context (paste requirements, specs, or code)</label>
+          <textarea id="chat-context" placeholder="Optional: paste anything you want the AI to reason about"></textarea>
+          <label class="col-label">Question</label>
+          <textarea id="chat-question" class="short" placeholder="e.g. Which edge cases am I missing for this requirement?"></textarea>
+          <button class="run-btn" data-action="chat">Ask</button>
+        </div>
+        <div class="col output-col">
+          <div class="output-header">
+            <span class="filename">Answer</span>
+            <div class="output-actions">
+              <button class="icon-btn" data-copy="chat-output">Copy</button>
+            </div>
+          </div>
+          <pre class="code-output prose" id="chat-output" data-placeholder="The AI's answer will appear here."></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footbar">
+    <span>Powered by Groq (free tier) · Spring Boot 3 · Java 21</span>
+  </footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

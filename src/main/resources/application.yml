@@ -1,0 +1,32 @@
+server:
+  # Cloud platforms (Render, Railway, Cloud Run, etc.) inject the port to bind via $PORT.
+  # Falls back to 8080 for local Docker / development.
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: testgen-ai
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  ai:
+    openai:
+      # Spring AI reaches Groq through its OpenAI-compatible client: same client,
+      # different base-url + model. Get a free key at https://console.groq.com/keys
+      #
+      # NOTE: Spring AI appends /v1/chat/completions to this base-url, so it must NOT
+      # already include /v1. If you upgrade to Spring AI 2.x, the docs there use
+      # https://api.groq.com/openai/v1 instead - adjust GROQ_BASE_URL accordingly.
+      api-key: ${GROQ_API_KEY:not-configured}
+      base-url: ${GROQ_BASE_URL:https://api.groq.com/openai}
+      chat:
+        options:
+          model: ${GROQ_MODEL:llama-3.3-70b-versatile}
+          temperature: 0.3
+          max-tokens: 4000
+
+logging:
+  level:
+    com.testgenai: INFO
