@@ -2,17 +2,14 @@
 
 LLM-powered Spring Boot application that generates JUnit, Mockito, and REST Assured test suites from requirements, OpenAPI specs, and Java code
 
-## Features
-
-| # | Feature | How it works |
-|---|---------|---------------|
-| 1 | Requirement → JUnit tests | Paste a user story / requirement → generates a JUnit 5 + Mockito test class (positive, negative, boundary, security, concurrency cases) |
-| 2 | OpenAPI/Swagger → REST Assured tests | Paste a spec (JSON/YAML) → generates integration tests: happy path, auth, validation, boundary, negative |
-| 3 | Java code → JUnit + Mockito tests | Paste a Controller/Service/Repository → generates a test class mocking all collaborators |
-| 4 | Security test generation | Describe an endpoint → generates SQLi, JWT, CSRF, XSS, broken-auth, rate-limit tests |
-| 5 | Chat with your requirements | Paste context + ask a free-form question (e.g. "which edge cases am I missing?") |
-
-Every generated test can be copied or downloaded as a standalone `.java` file directly from the UI.
+## What it does
+Paste in whatever you've got, and it writes the tests for you.
+**A requirement or user story →**a JUnit 5 + Mockito test class covering the happy path, the failure cases, the boundaries, and the edge cases you'd probably forget at 5pm on a Friday.
+**An OpenAPI or Swagger spec →** REST Assured integration tests that hit every documented response: the 200s, the auth failures, the validation errors, the conflicts.
+**A Java class — controller, service, repository — →** a test class that mocks its collaborators and exercises every public method, including the null and exception paths.
+**A description of an endpoint →** security tests that actually try to break it: SQL injection, XSS, tampered JWTs, missing auth, rate limiting.
+Or just ask it something. Paste your requirements and ask "what edge cases am I missing?" — you get an answer, not code.
+Anything it generates, you can copy or download as a ready-to-drop-in .java file.
 
 ## Tech stack
 
@@ -40,12 +37,12 @@ Then open **http://localhost:8081**.
 
 All endpoints accept/return JSON.
 
-GET  /api/health
-POST /api/generate/requirements   { "input": "<requirement text>" }
-POST /api/generate/openapi        { "input": "<OpenAPI/Swagger spec>" }
-POST /api/generate/code           { "input": "<Java source>" }
-POST /api/generate/security       { "input": "<endpoint description>" }
-POST /api/chat                    { "input": "<context, optional>", "question": "<question>" }
+-GET  /api/health
+-POST /api/generate/requirements   { "input": "<requirement text>" }
+-POST /api/generate/openapi        { "input": "<OpenAPI/Swagger spec>" }
+-POST /api/generate/code           { "input": "<Java source>" }
+-POST /api/generate/security       { "input": "<endpoint description>" }
+-POST /api/chat                    { "input": "<context, optional>", "question": "<question>" }
 
 
 
