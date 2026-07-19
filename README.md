@@ -1,6 +1,6 @@
 # Test Case Generator
 LLM-powered Spring Boot application that generates JUnit, Mockito, and REST Assured test suites from requirements, OpenAPI specs, and Java.
-**Live Demo URL:** https://test-case-generator-zr65.onrender.com/
+- **Live Demo URL:** https://test-case-generator-zr65.onrender.com/
 
 ## What it does
 - **A requirement or user story →**a JUnit 5 + Mockito test class covering the happy path, the failure cases, the boundaries, and the edge cases you'd probably forget at 5pm on a Friday.
